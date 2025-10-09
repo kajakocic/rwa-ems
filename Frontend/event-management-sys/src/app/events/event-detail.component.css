@@ -1,0 +1,45 @@
+.card {
+    border-radius: 0;
+}
+
+.btn-custom {
+    background-color: black;  
+    color: white;   
+    font-size: 22px;         
+    border-color: black;
+    margin-left: 10px;      
+  }
+  
+  .btn-custom:hover {
+    background-color: white; 
+    color: black;            
+  }
+
+  .letters {
+    font-family: 'Cabin';
+    font-size: 20px;
+    font-weight: 500; 
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between; /* Ovo deli prostor između dva dela */
+    align-items: center;            /* Poravnava vertikalno dugmadi */
+  }
+  
+  .card-footer .back-button {
+    margin-right: auto; 
+  }
+  
+  .card-header, .card-footer
+  {
+    border-radius: 0;
+    background-color: #fee7ff;
+  }
+  .custom-img {
+    border: 5px solid #800080; /* Roze okvir */
+  }
+  .slika {
+    display: flex;
+    justify-content: center;
+  }

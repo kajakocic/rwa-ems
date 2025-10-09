@@ -1,0 +1,61 @@
+<div class="card" *ngIf="user">
+  <div class="card-header letters">Profil Korisnika</div>
+
+  <div class="card-body">
+    <!-- User Info with separated style for the label and value -->
+    <div class="row mb-3">
+      <div class="col-md-2 letters">
+        <strong class="label-style">Ime:</strong>
+      </div>
+      <div class="col-md-8 letters">
+        <span class="value-style">{{ user?.ime }}</span>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-2 letters">
+        <strong class="label-style">Prezime:</strong>
+      </div>
+      <div class="col-md-8 letters">
+        <span class="value-style">{{ user?.prezime }}</span>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-2 letters">
+        <strong class="label-style">Email:</strong>
+      </div>
+      <div class="col-md-8 letters">
+        <span class="value-style">{{ user?.email }}</span>
+      </div>
+    </div>
+
+    <!-- Reservations Section -->
+    <h4 class="mt-4 letters">Moje Rezervacije:</h4>
+    <div *ngIf="reservations.length > 0">
+      <ul class="list-group">
+        <li
+          *ngFor="let reservation of reservations"
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          <div>
+            <!-- Event Name as a link to the event details page -->
+            <a
+              [routerLink]="['/events', reservation.eventId]"
+              class="text-decoration-none letters"
+            >
+              <strong>{{ reservation.eventName }}</strong>
+            </a>
+            <div class="letters">
+              Broj rezervisanih mesta: {{ reservation.brMesta }}
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div *ngIf="reservations.length === 0">
+      <p>Nemate nijednu rezervaciju.</p>
+    </div>
+  </div>
+</div>

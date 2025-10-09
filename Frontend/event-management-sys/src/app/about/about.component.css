@@ -1,0 +1,21 @@
+.letters {
+    font-family: 'Cabin';
+    font-size: 24px;
+    font-weight: 500; 
+}
+.letters-naslov{
+    font-family: 'Cabin';
+    font-size: 28px;
+    font-weight: 600;
+
+}
+
+.card {
+    border-radius: 0;
+}
+
+.card-header, .card-footer
+{
+  border-radius: 0;
+  background-color: #fee7ff;
+}

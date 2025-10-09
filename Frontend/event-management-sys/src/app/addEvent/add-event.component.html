@@ -1,0 +1,176 @@
+<div class="add-event-card">
+  <div class="card">
+    <div class="card-header letters">Dodaj Novi Događaj</div>
+    <div class="card-body">
+      <!-- Forma za dodavanje događaja -->
+      <form [formGroup]="addEventForm" (ngSubmit)="onSubmit()">
+        <!-- Naziv događaja -->
+        <div class="mb-3">
+          <label for="eventName" class="form-label letters"
+            >Naziv događaja</label
+          >
+          <input
+            type="text"
+            class="form-control fc"
+            id="eventName"
+            placeholder="Unesite naziv događaja"
+            formControlName="naziv"
+            required
+          />
+          @if(addEventForm.get('naziv')?.invalid &&
+          addEventForm.get('naziv')?.touched) {
+          <div class="text-danger">Naziv događaja je obavezno polje.</div>
+          }
+        </div>
+
+        <!-- Datum događaja -->
+        <div class="mb-3">
+          <label for="eventDate" class="form-label letters"
+            >Datum događaja</label
+          >
+          <input
+            type="date"
+            class="form-control fc"
+            id="eventDate"
+            formControlName="datum"
+            required
+          />
+          @if(addEventForm.get('datum')?.invalid &&
+          addEventForm.get('datum')?.touched) {
+          <div class="text-danger">Datum događaja je obavezno polje.</div>
+          }
+        </div>
+
+        <!-- Kapacitet -->
+        <div class="mb-3">
+          <label for="capacity" class="form-label letters">Kapacitet</label>
+          <input
+            type="number"
+            class="form-control fc"
+            id="capacity"
+            formControlName="kapacitet"
+            placeholder="Unesite kapacitet događaja"
+            required
+          />
+          @if(addEventForm.get('kapacitet')?.invalid &&
+          addEventForm.get('kapacitet')?.touched) {
+          <div class="text-danger">Kapacitet je obavezno polje.</div>
+          }
+        </div>
+
+        <!-- Opis događaja -->
+        <div class="mb-3">
+          <label for="eventDescription" class="form-label letters"
+            >Opis događaja</label
+          >
+          <textarea
+            class="form-control fc"
+            id="eventDescription"
+            formControlName="opis"
+            placeholder="Unesite opis događaja"
+            rows="4"
+            required
+          ></textarea>
+          @if(addEventForm.get('opis')?.invalid &&
+          addEventForm.get('opis')?.touched) {
+          <div class="text-danger">Opis događaja je obavezno polje.</div>
+          }
+        </div>
+
+        <!-- Cena karte -->
+        <div class="mb-3">
+          <label for="ticketPrice" class="form-label letters">Cena karte</label>
+          <input
+            type="number"
+            class="form-control fc"
+            id="ticketPrice"
+            formControlName="cenaKarte"
+            placeholder="Unesite cenu karte"
+            required
+          />
+          @if(addEventForm.get('cenaKarte')?.invalid &&
+          addEventForm.get('cenaKarte')?.touched) {
+          <div class="text-danger">Cena karte je obavezno polje.</div>
+          }
+        </div>
+
+        <!-- URL Slike -->
+        <div class="mb-3">
+          <label for="imageUrl" class="form-label letters">URL slike</label>
+          <input
+            type="url"
+            class="form-control fc"
+            id="imageUrl"
+            formControlName="urlImg"
+            placeholder="Unesite URL slike"
+            required
+          />
+          @if(addEventForm.get('urlImg')?.invalid &&
+          addEventForm.get('urlImg')?.touched) {
+          <div class="text-danger">URL slike je obavezno polje.</div>
+          }
+        </div>
+
+        <!--Lokacija (dropdown) -->
+        <div class="mb-3">
+          <label for="eventLocation" class="form-label letters">Lokacija</label>
+          <select
+            class="form-select fc"
+            id="eventLocation"
+            formControlName="lokacijaId"
+            required
+          >
+            <option value="">Izaberite lokaciju</option>
+            <option *ngFor="let location of locations" [ngValue]="location.id">
+              {{ location.lokacija }}
+            </option>
+          </select>
+          @if(addEventForm.get('lokacija')?.invalid &&
+          addEventForm.get('lokacija')?.touched) {
+          <div class="text-danger">Lokacija je obavezno polje.</div>
+          }
+        </div>
+
+        <!-- Kategorija (dropdown) -->
+        <div class="mb-3">
+          <label for="eventCategory" class="form-label letters"
+            >Kategorija</label
+          >
+          <select
+            class="form-select fc"
+            id="eventCategory"
+            formControlName="kategorijaId"
+            required
+          >
+            <option value="">Izaberite kategoriju</option>
+            <option *ngFor="let category of categories" [ngValue]="category.id">
+              {{ category.kategorija }}
+            </option>
+          </select>
+          @if(addEventForm.get('kategorija')?.invalid &&
+          addEventForm.get('kategorija')?.touched) {
+          <div class="text-danger">Kategorija je obavezno polje.</div>
+          }
+        </div>
+
+        <!-- Dugme za submit -->
+        <div class="mb-3">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="addEventForm.invalid"
+          >
+            Dodaj događaj
+          </button>
+        </div>
+
+        <!-- Dugme za otkazivanje -->
+        <div class="mb-3">
+          <button type="button" class="btn btn-secondary" (click)="onCancel()">
+            Otkaži
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

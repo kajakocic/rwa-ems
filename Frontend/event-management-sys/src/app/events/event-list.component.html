@@ -1,0 +1,96 @@
+<div class="col-md-12 card">
+  <div class="card-header letters">{{ naslov }}</div>
+  <div class="card-body">
+    <!--Filter start-->
+    <div class="row filter">
+      <!-- Filter po nazivu -->
+      <div class="col-md-3">
+        <label for="listFilter" class="mb-2 mt-2 btn btn-purple letters-th"
+          >Pretraga po nazivu:</label
+        >
+        <input type="text" [(ngModel)]="listFilter" class="form-control fc" />
+      </div>
+
+      <!-- Filter po datumu -->
+      <div class="col-md-3">
+        <label for="filterDate" class="mb-2 mt-2 btn btn-purple letters-th"
+          >Pretraga po datumu:</label
+        >
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Odaberite datum</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            [(ngModel)]="filterDate"
+            (dateChange)="filterEvents()"
+            id="filterDate"
+            class="form-control"
+          />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+    <!--Filter end-->
+
+    <!-- Table start -->
+    <div class="table-responsive">
+      <table class="table" *ngIf="events.length">
+        <thead>
+          <tr>
+            <th><div class="btn btn-purple letters-th">Naziv</div></th>
+            <th><div class="btn btn-purple letters-th">Datum</div></th>
+            <th><div class="btn btn-purple letters-th">Ulaznica</div></th>
+            <th><div class="btn btn-purple letters-th">Lokacija</div></th>
+            <th><div class="btn btn-purple letters-th">Kategorija</div></th>
+            <th><div class="btn btn-purple letters-th">Detalji</div></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let e of filteredEvents">
+            <td>
+              <a [routerLink]="['/events', e.id]">
+                {{ e.naziv }}
+              </a>
+            </td>
+            <td>
+              <div class="letters-text">
+                {{ e.datum | date : "d. MMMM y." }}
+              </div>
+            </td>
+            <td>
+              <div class="letters-text">
+                {{ e.cenaKarte | currency : "RSD" }}
+              </div>
+            </td>
+            <td>
+              <div class="letters-text">{{ e.lokacija }}</div>
+            </td>
+            <td>
+              <div class="letters-text">{{ e.kategorija | lowercase }}</div>
+            </td>
+            <td>
+              <div class="letters-text">{{ e.opis | firstSentence }}</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- Table end -->
+
+  <!--Footer start-->
+  @if(show()) {
+  <div class="card-footer">
+    <div class="add-button">
+      <a class="btn btn-purple letters-add" routerLink="/addEvent"
+        >Dodaj event</a
+      >
+    </div>
+  </div>
+  }
+  <!--Footer start-->
+</div>

@@ -1,0 +1,81 @@
+<div class="register-card">
+  <div class="card">
+    <div class="card-header letters">{{ naslov }}</div>
+    <div class="card-body">
+      <!-- Forma za registraciju -->
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <!-- Ime -->
+        <div class="mb-3">
+          <label for="firstName" class="form-label letters">Ime</label>
+          <input
+            type="text"
+            class="form-control fc"
+            id="firstName"
+            placeholder="Unesite vaše ime"
+            formControlName="ime"
+          />
+          @if(registerForm.get('ime')?.invalid &&
+          registerForm.get('ime')?.touched) {
+          <div class="text-danger">Ime je obavezno.</div>
+          }
+        </div>
+
+        <!-- Prezime -->
+        <div class="mb-3">
+          <label for="lastName" class="form-label letters">Prezime</label>
+          <input
+            type="text"
+            class="form-control fc"
+            id="lastName"
+            placeholder="Unesite vaše prezime"
+            formControlName="prezime"
+          />
+          @if(registerForm.get('prezime')?.invalid &&
+          registerForm.get('prezime')?.touched) {
+          <div class="text-danger">Prezime je obavezno.</div>
+          }
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+          <label for="email" class="form-label letters">Email</label>
+          <input
+            type="email"
+            class="form-control fc"
+            id="email"
+            placeholder="Unesite vaš email"
+            formControlName="email"
+          />
+          @if(registerForm.get('email')?.invalid &&
+          registerForm.get('email')?.touched) {
+          <div class="text-danger">Email je obavezan.</div>
+          }
+        </div>
+
+        <!-- Lozinka -->
+        <div class="mb-3">
+          <label for="password" class="form-label letters">Lozinka</label>
+          <input
+            type="password"
+            class="form-control fc"
+            id="password"
+            placeholder="Unesite vašu lozinku"
+            formControlName="password"
+          />
+          @if(registerForm.get('password')?.invalid &&
+          registerForm.get('password')?.touched) {
+          <div class="text-danger">Lozinka je obavezna.</div>
+          }
+        </div>
+
+        <!-- Dugme za registraciju -->
+        <button
+          type="submit"
+          class="btn btn-outline-secondary btn-custom letters"
+        >
+          Registruj se
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,90 @@
+<div class="card" *ngIf="event">
+  <div class="card-header">
+    {{ event.naziv }}
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="slika">
+        <img
+          class="img-fluid custom-img"
+          [style.width.px]="500"
+          [style.margin.px]="10"
+          [src]="event.urLimg"
+          [alt]="event.naziv"
+          [title]="event.naziv"
+        />
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <strong>Ovaj dogadjaj održaće se</strong>
+          {{ event.datum | date : "shortDate" }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <strong>Kapacitet:</strong> {{ event.kapacitet }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12"><strong>Detalji:</strong> {{ event.opis }}</div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <strong>Cena Karte:</strong>
+          {{ event.cenaKarte | currency : "RSD" }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <strong>Lokacija:</strong> {{ event.lokacija }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer start -->
+  <div class="card-footer">
+    <div class="back-button">
+      <button
+        class="btn btn-outline-secondary btn-custom letters"
+        (click)="onBack()"
+      >
+        <i class="fa fa-chevron-left"></i> Back
+      </button>
+    </div>
+
+    @if(!show()){
+    <div class="add-reservation">
+      <div class="form-group letters">
+        <label for="brojMesta">Unesite broj mesta</label>
+        <input
+          type="number"
+          class="form-control"
+          id="brojMesta"
+          [(ngModel)]="brojMesta"
+          [min]="1"
+          required
+        />
+      </div>
+
+      <!-- Dugme za rezervaciju -->
+      <button class="btn letters" (click)="onSubmit()">Rezerviši</button>
+    </div>
+    } @if(show()){
+    <div class="add-button">
+      <a
+        class="btn btn-outline-secondary btn-custom letters"
+        [routerLink]="['/editEvent', event.id]"
+        >Izmeni event</a
+      >
+    </div>
+    <button
+      class="btn btn-outline-secondary btn-custom letters"
+      (click)="onDelete()"
+    >
+      <i class="fa fa-trash"></i> Obriši
+    </button>
+    }
+  </div>
+  <!-- Footer end -->
+</div>

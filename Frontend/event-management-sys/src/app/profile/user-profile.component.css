@@ -1,0 +1,19 @@
+.letters {
+    font-family: 'Cabin';
+    font-size: 24px;
+    font-weight: 500; 
+}
+
+.card {
+    border-radius: 0;
+}
+
+.card-header, .card-footer
+{
+  border-radius: 0;
+  background-color: #fee7ff;
+}
+
+.list-group {
+    border-radius: 0;
+}
