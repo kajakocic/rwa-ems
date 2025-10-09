@@ -11,10 +11,10 @@ export class User {
   @Column({ type: 'enum', enum: UserType, default: UserType.REGULAR })
   tip: UserType;
 
-  @Column({ length: 100 })
+  @Column({ length: 50 })
   name: string;
 
-  @Column({ name: 'last_name', length: 100 })
+  @Column({ name: 'last_name', length: 50 })
   lastName: string;
 
   @Column({ unique: true })
@@ -23,7 +23,7 @@ export class User {
   @Column()
   password: string;
 
- @OneToMany(() => Registration, (registration) => registration.user)
+  @OneToMany(() => Registration, (registration) => registration.user)
   registrations: Registration[];
 
   @OneToMany(()=>Review,(review)=>review.user)

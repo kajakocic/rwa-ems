@@ -9,7 +9,7 @@ export class Event {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 50 })
+  @Column({ length: 100 })
   name: string;
 
   @Column({ type: 'timestamp' })
@@ -21,10 +21,10 @@ export class Event {
   @Column({ type: 'text' })
   description: string;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({  name: 'ticket_price', type: 'decimal', precision: 10, scale: 2 })
   ticketPrice: number;
 
-  @Column()
+  @Column({ name: 'url_img' })
   urlImg: string;
 
   @ManyToOne(() => Category, (category) => category.events, { eager: true }) //svaki put kada se ucita event ucita se i kategorija

@@ -11,7 +11,7 @@ export class Registration {
     capacity: number;
 
     @CreateDateColumn({ name: 'registered_at' })
-    registeredAt: Date;
+    registeredAt: Date; 
 
     @ManyToOne(() => Event, (event) => event.registrations, { eager: true })
     @JoinColumn({ name: 'event_id' })
