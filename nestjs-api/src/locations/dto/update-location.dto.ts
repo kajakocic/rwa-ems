@@ -4,5 +4,5 @@ export class UpdateLocationDto {
   @IsString()
   @IsOptional()
   @MaxLength(100)
-  naziv?: string;
+  name?: string;
 }

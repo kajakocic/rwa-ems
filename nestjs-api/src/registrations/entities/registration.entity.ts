@@ -22,4 +22,4 @@ export class Registration {
     user:User;
 }
 
-//GOTOVA
+//da li mozda treba da se zove reservation?

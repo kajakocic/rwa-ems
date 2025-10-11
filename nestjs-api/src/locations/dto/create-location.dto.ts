@@ -4,5 +4,5 @@ export class CreateLocationDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(100)
-  naziv: string;
+  name: string;
 }
