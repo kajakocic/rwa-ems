@@ -1,6 +1,6 @@
 import { IsInt, IsNotEmpty, Min, Max, IsOptional } from 'class-validator';
 
-export class CreateRegistrationDto {
+export class CreateReservationDto {
   @IsInt()
   @IsNotEmpty()
   eventId: number;

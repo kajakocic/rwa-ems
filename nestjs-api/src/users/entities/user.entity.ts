@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { UserType } from 'src/common/enums/user-type.enum';
-import { Review } from 'src/reviews/review.entity';
-import { Registration } from 'src/registrations/entities/registration.entity';
+import { Review } from 'src/reviews/entities/review.entity';
+import { Reservation } from 'src/reservations/entities/reservation.entity';
 
 @Entity('users')
 export class User {
@@ -23,8 +23,8 @@ export class User {
   @Column()
   password: string;
 
-  @OneToMany(() => Registration, (registration) => registration.user)
-  registrations: Registration[];
+  @OneToMany(() => Reservation, (registration) => registration.user)
+  registrations: Reservation[];
 
   @OneToMany(()=>Review,(review)=>review.user)
   reviews:Review[];

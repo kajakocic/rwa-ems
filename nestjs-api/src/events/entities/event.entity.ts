@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { Location } from 'src/locations/entities/location.entity';
-import { Review } from 'src/reviews/review.entity';
-import { Registration } from 'src/registrations/entities/registration.entity';
+import { Review } from 'src/reviews/entities/review.entity';
+import { Reservation } from 'src/reservations/entities/reservation.entity';
 import { Category } from 'src/categories/entities/category.entity';
 
 @Entity('events')
@@ -35,8 +35,8 @@ export class Event {
   @JoinColumn({ name: 'location_id' })
   location: Location;
 
-  @OneToMany(() => Registration, (registration) => registration.event)
-  registrations: Registration[];
+  @OneToMany(() => Reservation, (registration) => registration.event)
+  registrations: Reservation[];
  
   @OneToMany(() => Review, (review) => review.event)
   reviews: Review[]; 

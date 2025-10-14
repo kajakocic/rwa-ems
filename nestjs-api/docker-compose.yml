@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: events_db
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: eventsdb
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - events_network
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: events_backend
+    restart: always
+    ports:
+      - '3000:3000'
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USER: admin
+      DATABASE_PASSWORD: admin123
+      DATABASE_NAME: eventsdb
+      JWT_SECRET: your_super_secret_jwt_key_change_in_production
+      JWT_EXPIRES_IN: 7d
+    depends_on:
+      - postgres
+    networks:
+      - events_network
+    volumes:
+      - ./src:/app/src
+
+volumes:
+  postgres_data:
+
+networks:
+  events_network:
+    driver: bridge

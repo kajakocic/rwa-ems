@@ -4,5 +4,5 @@ export class UpdateCategoryDto {
   @IsString()
   @IsOptional()
   @MaxLength(100)
-  naziv?: string;
+  name?: string;
 }

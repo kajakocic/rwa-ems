@@ -3,7 +3,7 @@ export class ReviewResponseDto {
   rating: number;
   comment: string;
   createdAt: Date;
-  eventNaziv: string;
+  eventName: string;
   userName: string;
   userEmail: string;
 }

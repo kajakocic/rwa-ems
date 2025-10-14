@@ -1,7 +1,7 @@
-export class RegistrationResponseDto {
+export class ReservationResponseDto {
   id: number;
   capacity: number;
-  registeredAt: Date;
+  reservedAt: Date;
   eventNaziv: string;
   eventDatum: Date;
   userName: string;

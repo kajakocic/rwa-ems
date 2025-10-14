@@ -2,16 +2,16 @@ import { User } from "src/users/entities/user.entity";
 import { Event } from "src/events/entities/event.entity";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 
-@Entity('registrations')
-export class Registration {
+@Entity('reservations')
+export class Reservation {
     @PrimaryColumn()
     id:number;
 
     @Column({type:'int', default:1})
     capacity: number;
 
-    @CreateDateColumn({ name: 'registered_at' })
-    registeredAt: Date; 
+    @CreateDateColumn({ name: 'reserved_at' })
+    reservedAt: Date; 
 
     @ManyToOne(() => Event, (event) => event.registrations, { eager: true })
     @JoinColumn({ name: 'event_id' })
@@ -22,4 +22,3 @@ export class Registration {
     user:User;
 }
 
-//da li mozda treba da se zove reservation?
