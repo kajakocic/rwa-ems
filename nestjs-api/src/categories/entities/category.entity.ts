@@ -7,8 +7,8 @@ export class Category {
   id: number;
 
   @Column({ unique: true, length: 100 })
-  name: string;
+  kategorija: string;
 
-  @OneToMany(() => Event, (event) => event.category)
+  @OneToMany(() => Event, (event) => event.kategorija)
   events: Event[];
 }

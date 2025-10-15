@@ -10,19 +10,19 @@ import { LoggedUser, TipKorisnika } from './logged-user';
   providedIn: 'root',
 })
 export class AuthService {
-  private authUrl = environment.apiUrl;
+  private authUrl = `${environment.apiUrl}/auth`;
 
   constructor(private http: HttpClient, private router: Router) {}
 
   register(userData: IUser): Observable<IUser> {
-    return this.http.post<IUser>(`${this.authUrl}/Register`, userData);
+    return this.http.post<IUser>(`${this.authUrl}/register`, userData);
   }
 
   login(credentials: {
     email: string;
     password: string;
   }): Observable<LoggedUser> {
-    return this.http.post<LoggedUser>(`${this.authUrl}/Login`, credentials);
+    return this.http.post<LoggedUser>(`${this.authUrl}/login`, credentials);
   }
 
   decodeToken(token: string) {

@@ -5,6 +5,7 @@ import { Location } from "./entities/location.entity";
 import { CreateLocationDto } from "./dto/create-location.dto";
 import { from, map, take } from "rxjs";
 import { UpdateLocationDto } from "./dto/update-location.dto";
+import { LocationResponseDto } from "./dto/location-response.dto";
 
 @Injectable()
 export class LocationsService {
@@ -18,30 +19,25 @@ export class LocationsService {
     async create(createLocationDto: CreateLocationDto):Promise<Location>
     {
         const existing = await this.locationsRepository.findOne({
-            where: {name:createLocationDto.name}
+            where: {lokacija:createLocationDto.lokacija}
         });
 
         if (existing) {
-            throw new ConflictException(`Lokaciaja ${createLocationDto.name} već postoji.`);
+            throw new ConflictException(`Lokaciaja ${createLocationDto.lokacija} već postoji.`);
         }
 
         const location = this.locationsRepository.create(createLocationDto);
         return this.locationsRepository.save(location);
     }
 
-    findAll() {
-        return from(this.locationsRepository.find({ relations: ['events'] })).pipe( 
-        take(1),
-        map(locations => locations)
-        );
-        //relations radi join
-        //from()-iz rxjs biblioteke i pretvara Promise u Observable
-        //take i map suvisni
+    async findAll(): Promise<LocationResponseDto[]> {
+        const categories = await this.locationsRepository.find();
+  
+        return categories.map(location => ({
+            id: location.id,
+            lokacija: location.lokacija
+        }));
     }
-
-    /* async findAll(): Promise<Location[]> {
-        return this.locationsRepository.find({ relations: ['events'] });
-    } */
 
     async findOne(id: number):Promise<Location> {
         const location = await this.locationsRepository.findOne({

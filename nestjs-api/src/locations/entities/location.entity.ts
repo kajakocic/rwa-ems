@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany } from "typeorm";
-import { PrimaryGeneratedColumn } from "typeorm/browser";
+import { PrimaryGeneratedColumn } from "typeorm";
 import { Event } from "src/events/entities/event.entity";
 
 @Entity('locations')
@@ -8,9 +8,9 @@ export class Location {
     id: number;
 
     @Column({unique: true, length: 100})
-    name: string;
+    lokacija: string;
 
-    @OneToMany(()=>Event,(event)=>event.location)
+    @OneToMany(()=>Event,(event)=>event.lokacija)
     events: Event[];
 }
 

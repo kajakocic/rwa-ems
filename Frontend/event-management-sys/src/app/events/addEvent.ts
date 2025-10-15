@@ -9,3 +9,5 @@ export interface IAddEvent {
   kategorijaId: number;
   lokacijaId: number;
 }
+
+//CreateEventDto

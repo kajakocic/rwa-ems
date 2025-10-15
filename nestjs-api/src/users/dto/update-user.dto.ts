@@ -1,14 +1,15 @@
-import { IsEmail, IsEnum, IsOptional, IsString, Matches, MinLength } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsEmail, IsEnum, IsInt, IsOptional, IsString, Matches, MinLength } from 'class-validator';
 import { UserType } from 'src/common/enums/user-type.enum';
 
 export class UpdateUserDto {
     @IsString()
     @IsOptional()
-    name?: string;
+    ime?: string;
 
     @IsString()
     @IsOptional()
-    lastName?: string;
+    prezime?: string;
 
     @IsEmail()
     @IsOptional()
@@ -22,6 +23,8 @@ export class UpdateUserDto {
     @IsOptional()
     password?: string;
 
+    @Type(() => Number)  
+    @IsInt()
     @IsEnum(UserType)
     @IsOptional()
     tip?: UserType;

@@ -13,7 +13,7 @@ export class LocationsController {
 
     @Post()
     @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(UserType.ADMIN)
+    @Roles(UserType.Admin)
     create(@Body() createLocationDto: CreateLocationDto) {
       return this.locationsService.create(createLocationDto);
     }
@@ -30,14 +30,14 @@ export class LocationsController {
 
     @Patch(':id')
     @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(UserType.ADMIN)
+    @Roles(UserType.Admin)
     update(@Param('id') id: string, @Body() updateLocationDto: UpdateLocationDto) {
       return this.locationsService.update(+id, updateLocationDto);
     }
 
     @Delete(':id')
     @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(UserType.ADMIN)
+    @Roles(UserType.Admin)
     remove(@Param('id') id: string) {
       return this.locationsService.remove(+id);
     }

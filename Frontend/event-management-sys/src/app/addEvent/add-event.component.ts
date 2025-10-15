@@ -39,7 +39,7 @@ export class AddEventComponent implements OnInit {
       kapacitet: ['', [Validators.required]],
       opis: ['', [Validators.required]],
       cenaKarte: ['', [Validators.required]],
-      urlImg: ['', Validators.required],
+      urLimg: ['', Validators.required],
       lokacijaId: ['', Validators.required],
       kategorijaId: ['', Validators.required],
     });
@@ -84,7 +84,7 @@ export class AddEventComponent implements OnInit {
             kapacitet: event.kapacitet,
             opis: event.opis,
             cenaKarte: event.cenaKarte,
-            urlImg: event.urLimg,
+            urLimg: event.urLimg,
             lokacijaId: event.lokacijaId,
             kategorijaId: event.kategorijaId,
           });
@@ -113,17 +113,6 @@ export class AddEventComponent implements OnInit {
       console.log(this.addEventForm.value);
 
       console.log(this.addEventForm.get('kategorija')?.value);
-
-      // const formData = {
-      //   naziv: this.addEventForm.get('naziv')?.value,
-      //   datum: this.addEventForm.get('datum')?.value,
-      //   kapacitet: this.addEventForm.get('kapacitet')?.value,
-      //   opis: this.addEventForm.get('opis')?.value,
-      //   cenaKarte: this.addEventForm.get('cenaKarte')?.value,
-      //   urLimg: this.addEventForm.get('urLimg')?.value,
-      //   kategorijaId: +this.addEventForm.get('kategorija')?.value,
-      //   lokacijaId: +this.addEventForm.get('lokacija')?.value,
-      // } as IAddEvent;
 
       console.log(this.addEventForm.value);
 
@@ -168,6 +157,11 @@ export class AddEventComponent implements OnInit {
           },
           (error) => {
             console.error('Greška pri registraciji:', error);
+            // Log the full backend error message array for easier debugging
+            if (error && error.error && error.error.message) {
+              console.error('Backend validation errors:', error.error.message);
+              alert('Greške: ' + JSON.stringify(error.error.message));
+            }
 
             this.snackBar.open(
               'Greška prilikom dodavanja eventa. Pokušaj ponovo.',

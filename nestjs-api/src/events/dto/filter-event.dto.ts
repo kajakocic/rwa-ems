@@ -1,15 +1,18 @@
-import { IsOptional, IsDateString, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsOptional, IsDateString, IsString, IsNotEmpty, IsDate } from 'class-validator';
 
 export class FilterEventDto {
+  @Type(() => Date)  
+  @IsDate()          
+  @IsNotEmpty()
   @IsOptional()
-  @IsDateString()
-  date?: string;
+  datum?: Date; 
 
   @IsOptional()
   @IsString()
-  category?: string;
+  kategorija?: string;
 
   @IsOptional()
   @IsString()
-  location?: string;
+  lokacija?: string;
 }

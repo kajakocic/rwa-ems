@@ -10,36 +10,37 @@ export class Event {
   id: number;
 
   @Column({ length: 100 })
-  name: string;
+  naziv: string;
 
   @Column({ type: 'timestamp' })
-  date: Date;
+  datum: Date;
 
   @Column({ type: 'int' })
-  capacity: number;
+  kapacitet: number;
 
   @Column({ type: 'text' })
-  description: string;
+  opis: string;
 
   @Column({  name: 'ticket_price', type: 'decimal', precision: 10, scale: 2 })
-  ticketPrice: number;
+  cenaKarte: number;
 
   @Column({ name: 'url_img' })
-  urlImg: string;
+  urLimg: string;
 
   @ManyToOne(() => Category, (category) => category.events, { eager: true }) //svaki put kada se ucita event ucita se i kategorija
   @JoinColumn({ name: 'category_id' })
-  category: Category;
+  kategorija: Category;
 
   @ManyToOne(() => Location, (location) => location.events, { eager: true })
   @JoinColumn({ name: 'location_id' })
-  location: Location;
+  lokacija: Location;
 
-  @OneToMany(() => Reservation, (registration) => registration.event)
-  registrations: Reservation[];
+  /* @OneToMany(() => Reservation, (registration) => registration.event)
+  registrations: Reservation[]; */
  
   @OneToMany(() => Review, (review) => review.event)
   reviews: Review[]; 
+  registrations: any;
 }
 
 //GOTOVA

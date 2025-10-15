@@ -27,17 +27,26 @@ export class AuthService {
     });
 
     const payload = { email: user.email, sub: user.id, tip: user.tip };
+    const token = this.jwtService.sign(payload);
     
     return {
+      id: user.id,
+      ime: user.ime,
+      prezime: user.prezime,
+      password: user.password,
+      email: user.email,
+      tip: user.tip,
+    };
+   /*  return {
       access_token: this.jwtService.sign(payload),
       user: {
         id: user.id,
-        name: user.name,
-        lastName: user.lastName,
+        name: user.ime,
+        lastName: user.prezime,
         email: user.email,
         tip: user.tip,
       },
-    };
+    }; */
   }
 
   async login(loginDto: LoginDto) {
@@ -54,17 +63,27 @@ export class AuthService {
     }
 
     const payload = { email: user.email, sub: user.id, tip: user.tip };
-    
+    const token = this.jwtService.sign(payload);
+
     return {
+      id: user.id,
+      ime: user.ime,
+      prezime: user.prezime,
+      email: user.email,
+      tip: user.tip,
+      token: token,  
+    };
+    
+    /* return {
       access_token: this.jwtService.sign(payload),
       user: {
         id: user.id,
-        name: user.name,
-        lastName: user.lastName,
+        name: user.ime,
+        lastName: user.prezime,
         email: user.email,
         tip: user.tip,
       },
-    };
+    }; */
   }
 
   async validateUser(email: string, password: string): Promise<any> {

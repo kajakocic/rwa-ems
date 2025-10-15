@@ -84,14 +84,7 @@ import { AuthService } from './auth/auth.service';
   styleUrls: ['./app.component.css'],
   standalone: true,
   imports: [RouterLinkActive, RouterLink, RouterOutlet],
-  providers: [
-    // Provide the HTTP Interceptor locally for this standalone component
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true,
-    },
-  ],
+  // Interceptor now provided globally in app.config.ts
 })
 export class AppComponent {
   naslov = '#EMS';

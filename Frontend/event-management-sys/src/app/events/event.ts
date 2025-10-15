@@ -11,3 +11,5 @@ export interface IEvent {
   lokacija: string;
   lokacijaId: number;
 }
+
+//EventResponseDto

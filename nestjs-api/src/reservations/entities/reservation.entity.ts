@@ -8,10 +8,7 @@ export class Reservation {
     id:number;
 
     @Column({type:'int', default:1})
-    capacity: number;
-
-    @CreateDateColumn({ name: 'reserved_at' })
-    reservedAt: Date; 
+    brMesta: number;
 
     @ManyToOne(() => Event, (event) => event.registrations, { eager: true })
     @JoinColumn({ name: 'event_id' })

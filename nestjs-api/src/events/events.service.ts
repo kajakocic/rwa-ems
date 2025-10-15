@@ -8,7 +8,6 @@ import { FilterEventDto } from './dto/filter-event.dto';
 import { EventResponseDto } from './dto/event-response.dto';
 import { Category } from '../categories/entities/category.entity';
 import { Location } from '../locations/entities/location.entity';
-import { from, map, mergeMap, switchMap, filter, reduce } from 'rxjs';
 
 @Injectable()
 export class EventsService {
@@ -21,17 +20,20 @@ export class EventsService {
     private locationsRepository: Repository<Location>,
   ) {}
 
-  async create(createEventDto: CreateEventDto): Promise<Event> {
+  async create(createEventDto: CreateEventDto): Promise<Pick<EventResponseDto, 'id' | 'naziv' | 'datum' |
+    'kapacitet'|'opis'|'cenaKarte'|
+    'urLimg'|'kategorijaId'|'lokacijaId'>> {
+
     const postojeciEvent = await this.eventsRepository.findOne({
-      where: { name: createEventDto.name },
+      where: { naziv: createEventDto.naziv },
     });
 
     if (postojeciEvent) {
-      throw new ConflictException(`Event: ${createEventDto.name} već postoji.`);
+      throw new ConflictException(`Event: ${createEventDto.naziv} već postoji.`);
     }
 
     const location = await this.locationsRepository.findOne({
-      where: { id: createEventDto.locationId },
+      where: { id: createEventDto.lokacijaId },
     });
 
     if (!location) {
@@ -39,7 +41,7 @@ export class EventsService {
     }
 
     const category = await this.categoriesRepository.findOne({
-      where: { id: createEventDto.categoryId },
+      where: { id: createEventDto.kategorijaId },
     });
 
     if (!category) {
@@ -47,90 +49,109 @@ export class EventsService {
     }
 
     const noviEvent = this.eventsRepository.create({
-      name: createEventDto.name,
-      date: new Date(createEventDto.date),
-      capacity: createEventDto.capacity,
-      description: createEventDto.description,
-      ticketPrice: createEventDto.ticketPrice,
-      urlImg: createEventDto.urlImg,
-      category: category,
-      location: location,
+    naziv: createEventDto.naziv,
+    datum: new Date(createEventDto.datum),
+    kapacitet: createEventDto.kapacitet,
+    opis: createEventDto.opis,
+    cenaKarte: createEventDto.cenaKarte,
+    urLimg: createEventDto.urLimg,
+    kategorija: category,
+    lokacija: location,
+    });
+     const savedEvent = await this.eventsRepository.save(noviEvent);
+
+    return {
+      id: savedEvent.id,
+      naziv: savedEvent.naziv,
+      datum: savedEvent.datum,
+      kapacitet: savedEvent.kapacitet,
+      opis: savedEvent.opis,
+      cenaKarte: savedEvent.cenaKarte,
+      urLimg: savedEvent.urLimg,
+      kategorijaId: category.id,
+      lokacijaId: location.id,
+      //kao za IAddEvent na frontendu
+  };
+  }
+
+  async findAll(): Promise<EventResponseDto[]> {
+    const events = await this.eventsRepository.find({
+      relations: ['kategorija', 'lokacija'],
     });
 
-    return this.eventsRepository.save(noviEvent);
+    return events.map(event => this.mapToResponseDto(event));
   }
 
-  findAll() {
-    return from(
-      this.eventsRepository.find({
-        relations: ['category', 'location', 'registrations', 'reviews'],
-      })
-    ).pipe(
-      mergeMap(events => events),
-      map(event => this.mapToResponseDto(event)),
-      reduce((acc, event) => [...acc, event], [] as EventResponseDto[])
-    );
-  }
-
-  async findOne(id: number): Promise<Event> {
+  async findOne(id: number): Promise<EventResponseDto> {
     if (id <= 0) {
       throw new NotFoundException('Neispravan id.');
     }
 
     const event = await this.eventsRepository.findOne({
       where: { id },
-      relations: ['category', 'location', 'registrations', 'reviews'],
+      relations: ['kategorija', 'lokacija'],
     });
 
     if (!event) {
       throw new NotFoundException(`Event sa id: ${id} ne postoji.`);
     }
 
-    return event;
+    return this.mapToResponseDto(event);
   }
 
-  async update(id: number, updateEventDto: UpdateEventDto): Promise<Event> {
+  async update(id: number, updateEventDto: UpdateEventDto): Promise<EventResponseDto> {
     const postojeciEvent = await this.eventsRepository.findOne({
       where: { id },
-      relations: ['category', 'location'],
+      relations: ['kategorija', 'lokacija'],
     });
 
     if (!postojeciEvent) {
       throw new NotFoundException('Event koji tražite ne postoji.');
     }
 
-    if (updateEventDto.locationId) {
+    if (updateEventDto.lokacijaId) {
       const location = await this.locationsRepository.findOne({
-        where: { id: updateEventDto.locationId },
+        where: { id: updateEventDto.lokacijaId },
       });
 
       if (!location) {
         throw new NotFoundException('Lokacija koju tražite ne postoji.');
       }
 
-      postojeciEvent.location = location;
+      postojeciEvent.lokacija = location;
     }
 
-    if (updateEventDto.categoryId) {
+    if (updateEventDto.kategorijaId) {
       const category = await this.categoriesRepository.findOne({
-        where: { id: updateEventDto.categoryId },
+        where: { id: updateEventDto.kategorijaId },
       });
 
       if (!category) {
         throw new NotFoundException('Kategorija koju tražite ne postoji.');
       }
 
-      postojeciEvent.category = category;
+      postojeciEvent.kategorija = category;
     }
 
-    if (updateEventDto.name) postojeciEvent.name = updateEventDto.name;
-    if (updateEventDto.description) postojeciEvent.description = updateEventDto.description;
-    if (updateEventDto.date) postojeciEvent.date = new Date(updateEventDto.date);
-    if (updateEventDto.ticketPrice !== undefined) postojeciEvent.ticketPrice = updateEventDto.ticketPrice;
-    if (updateEventDto.urlImg) postojeciEvent.urlImg = updateEventDto.urlImg;
-    if (updateEventDto.capacity !== undefined) postojeciEvent.capacity = updateEventDto.capacity;
+    if (updateEventDto.naziv) postojeciEvent.naziv = updateEventDto.naziv;
+    if (updateEventDto.opis) postojeciEvent.opis = updateEventDto.opis;
+    if (updateEventDto.datum) postojeciEvent.datum = new Date(updateEventDto.datum);
+    if (updateEventDto.cenaKarte !== undefined) postojeciEvent.cenaKarte = updateEventDto.cenaKarte;
+    if (updateEventDto.urLimg) postojeciEvent.urLimg = updateEventDto.urLimg;
+    if (updateEventDto.kapacitet !== undefined) postojeciEvent.kapacitet = updateEventDto.kapacitet;
 
-    return this.eventsRepository.save(postojeciEvent);
+    const updatedEvent = await this.eventsRepository.save(postojeciEvent);
+
+    const eventWithRelations = await this.eventsRepository.findOne({
+      where: { id: updatedEvent.id },
+      relations: ['kategorija', 'lokacija']
+    });
+
+    if (!eventWithRelations) {
+      throw new NotFoundException(`Event sa id: ${id} ne postoji nakon čuvanja.`);
+    }
+
+    return this.mapToResponseDto(eventWithRelations);
   }
 
   async remove(id: number): Promise<void> {
@@ -147,47 +168,46 @@ export class EventsService {
     await this.eventsRepository.remove(event);
   }
 
-  async filterEvents(filterDto: FilterEventDto) {
+  async filterEvents(filterDto: FilterEventDto): Promise<EventResponseDto[]> {
     const queryBuilder = this.eventsRepository
       .createQueryBuilder('event')
-      .leftJoinAndSelect('event.category', 'category')
-      .leftJoinAndSelect('event.location', 'location');
+      .leftJoinAndSelect('event.kategorija', 'kategorija')
+      .leftJoinAndSelect('event.lokacija', 'lokacija');
 
-    if (filterDto.date) {
-      const datum = new Date(filterDto.date);
+    if (filterDto.datum) {
+      const datum = new Date(filterDto.datum);
       queryBuilder.andWhere('DATE(event.datum) = DATE(:datum)', { datum });
     }
 
-    if (filterDto.category) {
-      queryBuilder.andWhere('category.naziv = :kategorija', { kategorija: filterDto.category });
+    if (filterDto.kategorija) {
+      queryBuilder.andWhere('kategorija.name = :kategorija', { 
+        kategorija: filterDto.kategorija 
+      });
     }
 
-    if (filterDto.location) {
-      queryBuilder.andWhere('location.naziv = :lokacija', { lokacija: filterDto.location });
+    if (filterDto.lokacija) {
+      queryBuilder.andWhere('lokacija.name = :lokacija', { 
+        lokacija: filterDto.lokacija 
+      });
     }
 
     const events = await queryBuilder.getMany();
-
-    return from(events).pipe(
-      filter(event => event !== null),
-      map(event => this.mapToResponseDto(event)),
-      reduce((acc, event) => [...acc, event], [] as EventResponseDto[])
-    );
+    return events.map(event => this.mapToResponseDto(event));
   }
 
   private mapToResponseDto(event: Event): EventResponseDto {
     return {
       id: event.id,
-      name: event.name,
-      date: event.date,
-      capacity: event.capacity,
-      description: event.description,
-      ticketPrice: Number(event.ticketPrice),
-      urlImg: event.urlImg,
-      category: event.category?.name || '',
-      location: event.location?.name || '',
-      categoryId: event.category?.id || 0,
-      locationId: event.location?.id || 0,
+      naziv: event.naziv,
+      datum: event.datum,
+      kapacitet: event.kapacitet,
+      opis: event.opis,
+      cenaKarte: Number(event.cenaKarte),
+      urLimg: event.urLimg,
+      kategorija: event.kategorija?.kategorija || '',
+      lokacija: event.lokacija?.lokacija || '',
+      kategorijaId: event.kategorija?.id || 0,
+      lokacijaId: event.lokacija?.id || 0,
     };
   }
 }

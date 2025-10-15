@@ -1,14 +1,15 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsEnum, IsInt, IsNotEmpty, IsString, MinLength } from 'class-validator';
 import { UserType } from '../../common/enums/user-type.enum';
+import { Type } from 'class-transformer';
 
 export class RegisterDto {
   @IsString()
   @IsNotEmpty()
-  name: string;
+  ime: string;
 
   @IsString()
   @IsNotEmpty()
-  lastName: string;
+  prezime: string;
 
   @IsEmail()
   @IsNotEmpty()
@@ -18,6 +19,9 @@ export class RegisterDto {
   @MinLength(6)
   password: string;
 
+  @Type(() => Number)  
+  @IsInt()
   @IsEnum(UserType)
   tip: UserType;
 }
+

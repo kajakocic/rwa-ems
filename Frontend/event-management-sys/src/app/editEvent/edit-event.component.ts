@@ -61,8 +61,8 @@ export class EditEventComponent implements OnInit {
             opis: event.opis,
             cenaKarte: event.cenaKarte,
             urlImg: event.urLimg,
-            lokacijaId: event.lokacija,
-            kategorijaId: event.kategorija,
+            lokacijaId: event.lokacijaId,
+            kategorijaId: event.kategorijaId,
           });
         } else {
           this.snackBar.open('Događaj nije pronađen.', 'Zatvori', {
@@ -85,49 +85,6 @@ export class EditEventComponent implements OnInit {
   }
 
   onSubmit(): void {
-    // if (this.editEventForm.valid) {
-    //   console.log(this.editEventForm.value);
-    //   const formData = {
-    //     id: this.eventId,
-    //     naziv: this.editEventForm.get('naziv')?.value,
-    //     datum: this.editEventForm.get('datum')?.value,
-    //     kapacitet: this.editEventForm.get('kapacitet')?.value,
-    //     opis: this.editEventForm.get('opis')?.value,
-    //     cenaKarte: this.editEventForm.get('cenaKarte')?.value,
-    //     urLimg: this.editEventForm.get('urlImg')?.value,
-    //     kategorija: this.editEventForm.get('kategorijaId')?.value,
-    //     lokacija: this.editEventForm.get('lokacijaId')?.value,
-    //   } as IEvent;
-    //   console.log(formData);
-    //   this.eventService.updateEvent(formData).subscribe({
-    //     next: (event) => {
-    //       this.snackBar.open('Event je uspešno izmenjen!', 'Zatvori', {
-    //         duration: 6000,
-    //         horizontalPosition: 'center',
-    //         verticalPosition: 'top',
-    //       });
-    //       this.router.navigate(['/events']);
-    //     },
-    //     error: (err) => {
-    //       this.errorMessage = err;
-    //       this.snackBar.open(
-    //         'Došlo je do greške prilikom izmene eventa. Pokušaj ponovo.',
-    //         'Zatvori',
-    //         {
-    //           duration: 6000,
-    //           horizontalPosition: 'center',
-    //           verticalPosition: 'top',
-    //         }
-    //       );
-    //     },
-    //   });
-    // } else {
-    //   this.snackBar.open('Molimo popunite sva polja.', 'Zatvori', {
-    //     duration: 6000,
-    //     horizontalPosition: 'center',
-    //     verticalPosition: 'top',
-    //   });
-    // }
   }
 
   onCancel(): void {

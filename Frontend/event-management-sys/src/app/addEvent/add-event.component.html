@@ -101,12 +101,12 @@
             type="url"
             class="form-control fc"
             id="imageUrl"
-            formControlName="urlImg"
+            formControlName="urLimg"
             placeholder="Unesite URL slike"
             required
           />
-          @if(addEventForm.get('urlImg')?.invalid &&
-          addEventForm.get('urlImg')?.touched) {
+          @if(addEventForm.get('urLimg')?.invalid &&
+          addEventForm.get('urLimg')?.touched) {
           <div class="text-danger">URL slike je obavezno polje.</div>
           }
         </div>

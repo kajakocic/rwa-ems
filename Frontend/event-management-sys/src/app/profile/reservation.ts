@@ -5,3 +5,5 @@ export interface IReservation {
   eventName: string;
   brMesta: number;
 }
+
+//ReservationResponseDto

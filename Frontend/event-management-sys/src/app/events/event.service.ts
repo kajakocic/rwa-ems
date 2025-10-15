@@ -11,58 +11,47 @@ import { IAddEvent } from './addEvent';
   providedIn: 'root',
 })
 export class EventService {
-  // const baseUrl = '';
-  //`${konstanta}Event/PrikaziFiltriraneEvente`
-  private eventUrl = 'http://localhost:5245/api/Event/prikaziEvente';
-  private locUrl = 'http://localhost:5245/api/Location/PrikaziSveLokacije';
-  private katUtl = 'http://localhost:5245/api/Kategorija/PrikaziSveKategorije';
-  private dodajEvUrl = 'http://localhost:5245/api/Event/DodajEvent';
-  private izmeniEvUrl = 'http://localhost:5245/api/Event/izmeniEvent';
-  private evUrl = environment.eventUrl;
+
+  private apiUrl = environment.apiUrl;
   constructor(private http: HttpClient) {}
 
-  /* getEventsFromServer(): Observable<IEvent[]> {
-    return this.http.get<IEvent[]>(
-      'http://localhost:5245/api/Event/PrikaziFiltriraneEvente'
-    ); */
-
   getEvents(): Observable<IEvent[]> {
-    return this.http.get<IEvent[]>(this.eventUrl).pipe(
+    return this.http.get<IEvent[]>(`${this.apiUrl}/events`).pipe(
       tap((data) => console.log('All', JSON.stringify(data))),
       catchError(this.handleError)
     );
   }
 
-  getEvent(id: number): Observable<IEvent | undefined> {
-    return this.getEvents().pipe(
-      map((events: IEvent[]) => events.find((e) => e.id === id))
-    );
-  }
+  getEvent(id: number): Observable<IEvent> {
+  return this.http.get<IEvent>(`${this.apiUrl}/events/${id}`).pipe(
+    tap((data) => console.log('Event:', JSON.stringify(data))),
+    catchError(this.handleError)
+  );}
 
   getLocations(): Observable<ILocation[]> {
-    return this.http.get<ILocation[]>(this.locUrl).pipe(
+    return this.http.get<ILocation[]>(`${this.apiUrl}/locations`).pipe(
       tap((data) => console.log('All', JSON.stringify(data))),
       catchError(this.handleError)
     );
   }
 
   getCategories(): Observable<IKategorija[]> {
-    return this.http.get<IKategorija[]>(this.katUtl).pipe(
+    return this.http.get<IKategorija[]>(`${this.apiUrl}/categories`).pipe(
       tap((data) => console.log('All', JSON.stringify(data))),
       catchError(this.handleError)
     );
   }
 
   addEvent(eventData: IAddEvent): Observable<IAddEvent> {
-    return this.http.post<IAddEvent>(this.dodajEvUrl, eventData);
+    return this.http.post<IAddEvent>(`${this.apiUrl}/events`, eventData);
   }
 
   deleteEvent(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.evUrl}/ObrisiEvent/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/events/${id}`);
   }
 
   updateEvent(eventData: IAddEvent): Observable<IEvent> {
-    return this.http.put<IEvent>(this.izmeniEvUrl, eventData);
+    return this.http.put<IEvent>(`${this.apiUrl}/events/${eventData.id}`, eventData);
   }
 
   private handleError(err: HttpErrorResponse) {

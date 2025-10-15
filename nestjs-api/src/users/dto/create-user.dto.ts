@@ -1,15 +1,16 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsString, Matches, MinLength } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsEmail, IsEnum, IsInt, IsNotEmpty, IsString, Matches, MinLength } from 'class-validator';
 import { UserType } from 'src/common/enums/user-type.enum';
 
 export class CreateUserDto {
 
   @IsString()
   @IsNotEmpty()
-  name: string;
+  ime: string;
 
   @IsString()
   @IsNotEmpty()
-  lastName: string;
+  prezime: string;
 
   @IsEmail()
   @IsNotEmpty()
@@ -22,6 +23,8 @@ export class CreateUserDto {
   @Matches(/[^A-Za-z0-9]/, { message: 'Lozinka mora sadržati barem jedan specijalni znak.' })
   password: string;
 
+  @Type(() => Number)  
+  @IsInt()
   @IsEnum(UserType)
   tip: UserType;
 }

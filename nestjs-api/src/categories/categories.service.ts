@@ -5,6 +5,7 @@ import { Category } from './entities/category.entity';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { from, map } from 'rxjs';
+import { CategoryResponseDto } from './dto/category-response.dto';
 
 @Injectable()
 export class CategoriesService {
@@ -15,23 +16,25 @@ export class CategoriesService {
 
   async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
     const existing = await this.categoriesRepository.findOne({
-      where: { name: createCategoryDto.name },
+      where: { kategorija: createCategoryDto.kategorija },
     });
 
     if (existing) {
-      throw new ConflictException(`Kategorija ${createCategoryDto.name} već postoji.`);
+      throw new ConflictException(`Kategorija ${createCategoryDto.kategorija} već postoji.`);
     }
 
     const category = this.categoriesRepository.create(createCategoryDto);
     return this.categoriesRepository.save(category);
   }
 
-  findAll() {
-    return from(this.categoriesRepository.find({ relations: ['events'] })).pipe(
-      map(categories => categories)
-      //dodaj
-    );
-  }
+  async findAll(): Promise<CategoryResponseDto[]> {
+    const categories = await this.categoriesRepository.find();
+  
+    return categories.map(category => ({
+      id: category.id,
+      kategorija: category.kategorija
+      }));
+    }
 
   async findOne(id: number): Promise<Category> {
     const category = await this.categoriesRepository.findOne({

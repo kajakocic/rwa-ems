@@ -8,14 +8,14 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'enum', enum: UserType, default: UserType.REGULAR })
+  @Column({type: 'int', default: UserType.Korisnik })
   tip: UserType;
 
   @Column({ length: 50 })
-  name: string;
+  ime: string;
 
   @Column({ name: 'last_name', length: 50 })
-  lastName: string;
+  prezime: string;
 
   @Column({ unique: true })
   email: string;

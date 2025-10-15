@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseGuards } from '@nestjs/common';
 import { ReservationsService } from './reservation.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
@@ -16,16 +16,6 @@ export class ReservationsController {
   @Get()
   findAll() {
     return this.reservationsService.findAll();
-  }
-
-  @Get('user/:userId')
-  findByUser(@Param('userId') userId: string) {
-    return this.reservationsService.findByUser(+userId);
-  }
-
-  @Get('event/:eventId')
-  findByEvent(@Param('eventId') eventId: string) {
-    return this.reservationsService.findByEvent(+eventId);
   }
 
   @Get(':id')

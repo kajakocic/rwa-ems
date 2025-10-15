@@ -6,7 +6,6 @@ import { CreateReservationDto } from './dto/create-reservation.dto';
 import { ReservationResponseDto } from './dto/reservation-response.dto';
 import { Event } from '../events/entities/event.entity';
 import { User } from '../users/entities/user.entity';
-import { from, map, mergeMap, zip, reduce } from 'rxjs';
 
 @Injectable()
 export class ReservationsService {
@@ -19,7 +18,11 @@ export class ReservationsService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async create(createReservationDto: CreateReservationDto): Promise<Reservation> {
+  /**
+   * Kreira novu rezervaciju za event
+   */
+  async create(createReservationDto: CreateReservationDto): Promise<ReservationResponseDto> {
+    // Provera da li event postoji
     const event = await this.eventsRepository.findOne({
       where: { id: createReservationDto.eventId },
       relations: ['registrations'],
@@ -29,6 +32,7 @@ export class ReservationsService {
       throw new NotFoundException('Event ne postoji.');
     }
 
+    // Provera da li korisnik postoji
     const user = await this.usersRepository.findOne({
       where: { id: createReservationDto.userId },
     });
@@ -37,6 +41,7 @@ export class ReservationsService {
       throw new NotFoundException('Korisnik ne postoji.');
     }
 
+    // Provera da li korisnik već ima rezervaciju za ovaj event
     const existingReservation = await this.reservationsRepository.findOne({
       where: {
         event: { id: createReservationDto.eventId },
@@ -48,85 +53,122 @@ export class ReservationsService {
       throw new ConflictException('Korisnik je već registrovan za ovaj event.');
     }
 
-    const totalRegistered = event.registrations?.reduce((sum, reg) => sum + reg.capacity, 0) || 0;
-    const requestedCapacity = createReservationDto.capacity || 1;
+    // Provera dostupnosti mesta
+    const totalRegistered = event.registrations?.reduce((sum, reg) => sum + reg.brMesta, 0) || 0;
+    const requestedCapacity = createReservationDto.brMesta || 1;
 
-    if (totalRegistered + requestedCapacity > event.capacity) {
+    if (totalRegistered + requestedCapacity > event.kapacitet) {
       throw new BadRequestException('Nema dovoljno mesta za registraciju.');
     }
 
+    // Kreiranje rezervacije
     const reservation = this.reservationsRepository.create({
-      capacity: requestedCapacity,
+      brMesta: requestedCapacity,
       event: event,
       user: user,
     });
 
-    return this.reservationsRepository.save(reservation);
+    const savedReservation = await this.reservationsRepository.save(reservation);
+
+    // Vraćanje DTO objekta
+    return this.mapToResponseDto(savedReservation);
   }
 
-  findAll() {
-    return from(
-      this.reservationsRepository.find({
-        relations: ['event', 'user'],
-      })
-    ).pipe(
-      mergeMap(reservations => reservations),
-      map(reg => this.mapToResponseDto(reg)),
-      reduce((acc, reg) => [...acc, reg], [] as ReservationResponseDto[])
-    );
+  /**
+   * Vraća sve rezervacije
+   */
+  async findAll(): Promise<ReservationResponseDto[]> {
+    const reservations = await this.reservationsRepository.find({
+      relations: ['event', 'user'],
+    });
+
+    return reservations.map(reservation => this.mapToResponseDto(reservation));
   }
 
-  async findOne(id: number): Promise<Reservation> {
+  /**
+   * Vraća jednu rezervaciju po ID-u
+   */
+  async findOne(id: number): Promise<ReservationResponseDto> {
     const reservation = await this.reservationsRepository.findOne({
       where: { id },
       relations: ['event', 'user'],
     });
 
     if (!reservation) {
-      throw new NotFoundException(`Registracija sa id: ${id} ne postoji.`);
+      throw new NotFoundException(`Rezervacija sa ID ${id} ne postoji.`);
     }
 
-    return reservation;
+    return this.mapToResponseDto(reservation);
   }
 
-  async findByUser(userId: number) {
+  /**
+   * Vraća sve rezervacije jednog korisnika
+   */
+  async findByUser(userId: number): Promise<ReservationResponseDto[]> {
+    // Provera da li korisnik postoji
+    const user = await this.usersRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`Korisnik sa ID ${userId} ne postoji.`);
+    }
+
     const reservations = await this.reservationsRepository.find({
       where: { user: { id: userId } },
       relations: ['event', 'user'],
     });
 
-    return from(reservations).pipe(
-      map(reg => this.mapToResponseDto(reg)),
-      reduce((acc, reg) => [...acc, reg], [] as ReservationResponseDto[])
-    );
+    return reservations.map(reservation => this.mapToResponseDto(reservation));
   }
 
-  async findByEvent(eventId: number) {
+  /**
+   * Vraća sve rezervacije za određeni event
+   */
+  async findByEvent(eventId: number): Promise<ReservationResponseDto[]> {
+    // Provera da li event postoji
+    const event = await this.eventsRepository.findOne({
+      where: { id: eventId },
+    });
+
+    if (!event) {
+      throw new NotFoundException(`Event sa ID ${eventId} ne postoji.`);
+    }
+
     const reservations = await this.reservationsRepository.find({
       where: { event: { id: eventId } },
       relations: ['event', 'user'],
     });
 
-    return from(reservations).pipe(
-      map(reg => this.mapToResponseDto(reg)),
-      reduce((acc, reg) => [...acc, reg], [] as ReservationResponseDto[])
-    );
+    return reservations.map(reservation => this.mapToResponseDto(reservation));
   }
 
+  /**
+   * Briše rezervaciju po ID-u
+   */
   async remove(id: number): Promise<void> {
-    const reservation = await this.findOne(id);
+    const reservation = await this.reservationsRepository.findOne({
+      where: { id },
+    });
+
+    if (!reservation) {
+      throw new NotFoundException(`Rezervacija sa ID ${id} ne postoji.`);
+    }
+
     await this.reservationsRepository.remove(reservation);
   }
 
-  private mapToResponseDto(registration: Reservation): ReservationResponseDto {
+  /**
+   * Mapira Reservation entitet u ReservationResponseDto
+   */
+  private mapToResponseDto(reservation: Reservation): ReservationResponseDto {
     return {
-      id: registration.id,
-      capacity: registration.capacity,
-      reservedAt: registration.reservedAt,
-      eventNaziv: registration.event?.name || '',
-      eventDatum: registration.event?.date,
-      userName: `${registration.user?.name} ${registration.user?.lastName}`,
-      userEmail: registration.user?.email || '',
+      id: reservation.id,
+      userId: reservation.user.id,
+      userName: `${reservation.user.ime} ${reservation.user.prezime}`,
+      eventId: reservation.event.id,
+      eventName: reservation.event.naziv,
+      brMesta: reservation.brMesta,
     };
   }
 }

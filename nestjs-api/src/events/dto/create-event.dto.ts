@@ -1,39 +1,43 @@
-import { IsDateString, IsInt, IsNotEmpty, IsNumber, IsString, IsUrl, Max, MaxLength, Min } from "class-validator";
+import { Type } from "class-transformer";
+import { IsDate, IsDateString, IsInt, IsNotEmpty, IsNumber, IsString, IsUrl, Max, MaxLength, Min } from "class-validator";
 
 export class CreateEventDto {
 
   @IsString()
   @IsNotEmpty()
   @MaxLength(100)
-  name: string;
+  naziv: string;
 
-  @IsDateString()
+  @Type(() => Date)  
+  @IsDate()          
   @IsNotEmpty()
-  date: string;
+  datum: Date; 
 
   @IsInt()
   @Min(0)
   @Max(100000)
-  capacity: number;
+  kapacitet: number;
 
   @IsString()
   @IsNotEmpty()
-  description: string;
+  opis: string;
 
   @IsNumber()
   @Min(0)
   @Max(100000)
-  ticketPrice: number;
+  cenaKarte: number;
 
   @IsUrl()
   @IsNotEmpty()
-  urlImg: string;
+  urLimg: string;
 
   @IsInt()
   @IsNotEmpty()
-  categoryId: number;
+  kategorijaId: number;
 
   @IsInt()
   @IsNotEmpty()
-  locationId: number;
+  lokacijaId: number;
 }
+
+//IAddEvent

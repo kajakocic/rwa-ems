@@ -1,40 +1,44 @@
-import { IsOptional, IsString, IsDateString, IsInt, IsNumber, IsUrl, Min, Max, MaxLength } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsOptional, IsString, IsDateString, IsInt, IsNumber, IsUrl, Min, Max, MaxLength, IsDate, IsNotEmpty } from 'class-validator';
 
 export class UpdateEventDto {
   @IsString()
   @IsOptional()
   @MaxLength(100)
-  name?: string;
+  naziv?: string;
 
-  @IsDateString()
+  @Type(() => Date)  
+  @IsDate()          
+  @IsNotEmpty()
   @IsOptional()
-  date?: string;
+  datum?: Date; 
 
   @IsInt()
   @Min(0)
   @Max(100000)
   @IsOptional()
-  capacity?: number;
+  kapacitet?: number;
 
   @IsString()
   @IsOptional()
-  description?: string;
+  opis?: string;
 
   @IsNumber()
   @Min(0)
   @Max(100000)
   @IsOptional()
-  ticketPrice?: number;
+  cenaKarte?: number;
 
   @IsUrl()
   @IsOptional()
-  urlImg?: string;
+  urLimg?: string;
 
   @IsInt()
   @IsOptional()
-  categoryId?: number;
+  kategorijaId?: number;
 
   @IsInt()
   @IsOptional()
-  locationId?: number;
+  lokacijaId?: number;
 }
+//export class UpdateEventDto extends PartialType(CreateEventDto) {} moglo je i ovako da ne dupliram kod

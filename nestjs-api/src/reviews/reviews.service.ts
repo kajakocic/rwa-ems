@@ -145,8 +145,8 @@ export class ReviewsService {
       rating: review.rating,
       comment: review.comment,
       createdAt: review.createdAt,
-      eventName: review.event?.name || '',
-      userName: `${review.user?.name} ${review.user?.lastName}`,
+      eventName: review.event?.naziv || '',
+      userName: `${review.user?.ime} ${review.user?.prezime}`,
       userEmail: review.user?.email || '',
     };
   }

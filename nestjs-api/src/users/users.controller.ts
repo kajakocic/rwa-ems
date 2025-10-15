@@ -10,16 +10,17 @@ import { UserType } from '../common/enums/user-type.enum';
 @Controller('users')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class UsersController {
+  reservationsService: any;
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  @Roles(UserType.ADMIN)
+  //@Roles(UserType.Admin)
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
-  @Roles(UserType.ADMIN)
+  @Roles(UserType.Admin)
   findAll() {
     return this.usersService.findAll();
   }
@@ -35,8 +36,13 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @Roles(UserType.ADMIN)
+  @Roles(UserType.Admin)
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
+  }
+
+   @Get(':userId/reservations')
+    getUserReservations(@Param('userId') userId: string) {
+    return this.reservationsService.findByUser(+userId);
   }
 }

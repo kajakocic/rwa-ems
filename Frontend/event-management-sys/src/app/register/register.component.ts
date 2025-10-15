@@ -36,6 +36,7 @@ export class RegisterComponent {
         [Validators.required, Validators.email, emailDomainValidator()],
       ],
       password: ['', [Validators.required, Validators.minLength(6)]],
+      tip: [1], // 1: Korisnik by default
     });
   }
 
@@ -43,7 +44,8 @@ export class RegisterComponent {
     if (this.registerForm.valid) {
       console.log(this.registerForm.value);
 
-      const formData = this.registerForm.value;
+      // Always set tip to 1 (korisnik) before sending
+      const formData = { ...this.registerForm.value, tip: 1 };
       this.authService.register(formData).subscribe(
         (response) => {
           console.log('Korisnik registrovan:', response);
@@ -58,6 +60,11 @@ export class RegisterComponent {
         },
         (error) => {
           console.error('Greška pri registraciji:', error);
+          // Log the full backend error message array for easier debugging
+          if (error && error.error && error.error.message) {
+            console.error('Backend validation errors:', error.error.message);
+            alert('Greške: ' + JSON.stringify(error.error.message));
+          }
 
           this.snackBar.open(
             'Greška pri registraciji. Pokušaj ponovo.',
